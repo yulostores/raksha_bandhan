@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#8f1d1d" />
-    <title>Keshri Gift Hazaribag — Raksha Bandhan Rakhi Collection</title>
+    <title>Rakhi Offers in Hazaribag — Keshri Gift Raksha Bandhan Collection</title>
     <meta
       name="description"
-      content="Visit Keshri Gift at Mahesh Soni Chowk near Ujjivan Bank, Hazaribag, for traditional, kids, Rudraksha and premium Raksha Bandhan rakhis. Call 87890 87326."
+      content="Celebrate Raksha Bandhan at Keshri Gift, Hazaribag. Choose Buy 2 Get 1 Free or up to 30% off on selected rakhis. Offers cannot be combined."
     />
     <meta property="og:title" content="Keshri Gift — Rakhi Collection in Hazaribag" />
     <meta
       property="og:description"
-      content="Beautiful rakhis for every bond, available at Keshri Gift, Mahesh Soni Chowk, Hazaribag."
+      content="Choose Buy 2 Get 1 Free or up to 30% off on selected Rakhi styles at Keshri Gift, Hazaribag. Offers cannot be combined."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="assets/rakhi-hero.png" />
@@ -24,7 +24,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Gloock&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260816-2" />
 
     <!-- Meta Pixel placeholder: paste the base pixel code here before launch. -->
     <!-- Google Analytics placeholder: add the GA4 gtag script and measurement ID here. -->
@@ -34,7 +34,7 @@
         "@type": "Store",
         "name": "Keshri Gift",
         "telephone": "+91-87890-87326",
-        "description": "Gift shop with a festive Raksha Bandhan rakhi collection in Hazaribag.",
+        "description": "Gift shop with a festive Raksha Bandhan rakhi collection and special in-store offers in Hazaribag.",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Mahesh Soni Chowk, near Ujjivan Bank",
@@ -47,10 +47,10 @@
     </script>
   </head>
   <body>
-    <div class="announcement" role="status">
-      <span>Now in store</span>
-      <p>Mahesh Soni Chowk, near Ujjivan Bank, Hazaribag</p>
-      <a href="https://maps.app.goo.gl/jEbQZPmFc3gaxkAR8" target="_blank" rel="noopener">Directions <span aria-hidden="true">↗</span></a>
+    <div class="announcement" role="status" aria-label="Raksha Bandhan festive offers">
+      <span>Rakhi offers</span>
+      <p><strong>Buy 2, Get 1 Free</strong><i aria-hidden="true">or</i><strong>Up to 30% Off</strong><small>choose one offer</small></p>
+      <a class="offer-link" href="#festive-offers">View offers <span aria-hidden="true">↓</span></a>
     </div>
 
     <header class="site-header" id="top">
@@ -62,6 +62,7 @@
         </span>
       </a>
       <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#festive-offers">Offers</a>
         <a href="#products">Rakhi collection</a>
         <a href="#story">Our story</a>
         <a href="#location">Location</a>
@@ -79,6 +80,56 @@
             Discover beautiful rakhis for every brother—traditional, playful, sacred and premium—all
             waiting for you at Keshri Gift, Hazaribag.
           </p>
+          <div
+            class="hero-offer-carousel"
+            data-offer-carousel
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Choose one of two Raksha Bandhan offers"
+          >
+            <span class="hero-offer-kicker">Choose 1 of 2 festive offers</span>
+            <div class="hero-offer-viewport">
+              <div class="hero-offer-track" data-offer-track>
+                <a
+                  class="hero-offer-slide offer-link"
+                  data-offer-slide
+                  href="#festive-offers"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label="Offer 1 of 2: Buy 2, Get 1 Free"
+                >
+                  <span>Offer 01</span>
+                  <strong>Buy 2 <b>Get 1 Free</b></strong>
+                  <small>Selected rakhis <b aria-hidden="true">→</b></small>
+                </a>
+                <a
+                  class="hero-offer-slide offer-link"
+                  data-offer-slide
+                  href="#festive-offers"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label="Offer 2 of 2: Up to 30% Off"
+                >
+                  <span>Offer 02</span>
+                  <strong>Up to <b>30% Off</b></strong>
+                  <small>Selected rakhis <b aria-hidden="true">→</b></small>
+                </a>
+              </div>
+            </div>
+            <div class="hero-offer-footer">
+              <small><strong>Choose one offer</strong> · Cannot be combined</small>
+              <div class="hero-offer-controls" aria-label="Offer carousel controls">
+                <button class="carousel-toggle" type="button" data-offer-toggle aria-label="Pause offer carousel"><span aria-hidden="true">❚❚</span></button>
+                <button class="carousel-arrow" type="button" data-offer-prev aria-label="Show previous offer"><span aria-hidden="true">←</span></button>
+                <span class="carousel-dots" aria-label="Choose an offer">
+                  <button class="carousel-dot is-active" type="button" data-offer-dot="0" aria-label="Show Buy 2 Get 1 Free offer" aria-current="true"></button>
+                  <button class="carousel-dot" type="button" data-offer-dot="1" aria-label="Show up to 30% off offer"></button>
+                </span>
+                <button class="carousel-arrow" type="button" data-offer-next aria-label="Show next offer"><span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <span class="sr-only" data-offer-status aria-live="polite"></span>
+          </div>
           <div class="hero-actions">
             <a class="button button-primary call-link" href="tel:+918789087326">
               Call now
@@ -132,10 +183,10 @@
               <p class="eyebrow"><span></span> A glimpse of the collection</p>
               <h2 id="product-title">See what’s <em>in store.</em></h2>
             </div>
-            <p>Visit us to explore more colours, styles and price options in person.</p>
+            <p>Explore more colours and styles in person—and ask which rakhis are included in our festive offers.</p>
           </div>
           <div class="product-grid" id="product-grid"></div>
-          <p class="product-footnote reveal">More designs are available at Keshri Gift, Hazaribag <span aria-hidden="true">✦</span></p>
+          <p class="product-footnote reveal">Choose <strong>Buy 2, Get 1 Free</strong> or <strong>up to 30% off</strong> on selected rakhis. Offers cannot be combined <span aria-hidden="true">✦</span></p>
         </div>
       </section>
 
@@ -154,23 +205,33 @@
         </div>
       </section>
 
-      <section class="offer section-shell" aria-labelledby="offer-title">
+      <section class="offer section-shell" id="festive-offers" aria-labelledby="offer-title">
         <div class="offer-card reveal">
           <div class="offer-copy">
-            <p class="eyebrow light"><span></span> Come find the perfect one</p>
-            <h2 id="offer-title">Every bond has<br /><em>its own rakhi.</em></h2>
-            <p>See the collection up close, compare styles and take home the one that feels just right.</p>
-            <div class="offer-pills">
-              <span>Traditional & modern</span>
-              <span>Kids & premium options</span>
-              <span>Choices for every budget</span>
+            <p class="eyebrow light"><span></span> Raksha Bandhan festive offers</p>
+            <h2 id="offer-title">More rakhis. More smiles.<br /><em>More savings.</em></h2>
+            <p>Choose the eligible in-store offer that works best for your Rakhi purchase.</p>
+            <div class="offer-deals" role="list" aria-label="Available festive offers">
+              <div role="listitem">
+                <small>Share more joy</small>
+                <strong>Buy 2 <span>Get 1 Free</span></strong>
+              </div>
+              <span class="offer-or" aria-hidden="true">or</span>
+              <div role="listitem">
+                <small>Festive savings</small>
+                <strong>Up to <span>30% Off</span></strong>
+              </div>
             </div>
-            <a class="button button-cream directions-link" href="https://maps.app.goo.gl/jEbQZPmFc3gaxkAR8" target="_blank" rel="noopener">Visit the store <span aria-hidden="true">↗</span></a>
+            <div class="offer-actions">
+              <a class="button button-cream directions-link" href="https://maps.app.goo.gl/jEbQZPmFc3gaxkAR8" target="_blank" rel="noopener">Visit the store <span aria-hidden="true">↗</span></a>
+              <a class="offer-call call-link" href="tel:+918789087326">Call to check availability <span aria-hidden="true">☎</span></a>
+            </div>
+            <small class="offer-terms"><strong>Choose one offer:</strong> only one offer applies per eligible purchase. Offers cannot be combined or clubbed. Selected products only, while stocks last.</small>
           </div>
-          <div class="offer-seal" aria-label="Visit Keshri Gift in Hazaribag">
-            <span>Visit</span>
-            <strong>Keshri Gift</strong>
-            <small>Hazaribag</small>
+          <div class="offer-seal" aria-label="Festive double dhamaka offer in store">
+            <span>Festive</span>
+            <strong>Double<br />Dhamaka</strong>
+            <small>In store now</small>
           </div>
           <div class="offer-flower flower-one" aria-hidden="true">✺</div>
           <div class="offer-flower flower-two" aria-hidden="true">✺</div>
@@ -250,7 +311,7 @@
 
       <section class="final-cta" aria-labelledby="final-title">
         <div class="final-ornament" aria-hidden="true">✺</div>
-        <p>Your perfect rakhi is waiting</p>
+        <p>Buy 2, Get 1 Free <span aria-hidden="true">or</span> Up to 30% Off</p>
         <h2 id="final-title">Visit Keshri Gift<br /><em>this Raksha Bandhan.</em></h2>
         <div class="final-actions">
           <a class="button button-cream call-link" href="tel:+918789087326">Call now <span aria-hidden="true">☎</span></a>
@@ -272,7 +333,7 @@
 
     <a
       class="whatsapp-float"
-      href="https://wa.me/918789087326?text=Hi%20Keshri%20Gift%2C%20I%27d%20like%20to%20know%20about%20your%20Rakhi%20collection."
+      href="https://wa.me/918789087326?text=Hi%20Keshri%20Gift%2C%20I%27d%20like%20to%20know%20whether%20Buy%202%20Get%201%20Free%20or%20up%20to%2030%25%20off%20applies%20to%20my%20Rakhi%20purchase."
       target="_blank"
       rel="noopener"
       aria-label="Message Keshri Gift on WhatsApp"
@@ -281,8 +342,8 @@
       <span>Ask on WhatsApp</span>
     </a>
 
-    <a class="mobile-sticky call-link" href="tel:+918789087326"><span>Questions about the collection?</span><strong><i aria-hidden="true">☎</i> Call now</strong></a>
+    <a class="mobile-sticky call-link" href="tel:+918789087326"><span>Buy 2 Get 1 or up to 30% off</span><strong><i aria-hidden="true">☎</i> Call now</strong></a>
 
-    <script src="script.js" defer></script>
+    <script src="script.js?v=20260816-2" defer></script>
   </body>
 </html>

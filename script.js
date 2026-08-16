@@ -42,7 +42,7 @@ const categories = [
 
 const trustPoints = [
   { icon: "✦", title: "Festive variety", text: "Styles for every bond" },
-  { icon: "₹", title: "Every budget", text: "Plenty of choices" },
+  { icon: "%", title: "Festive offers", text: "Save up to 30%" },
   { icon: "⌖", title: "Easy to find", text: "Near Ujjivan Bank" },
   { icon: "☎", title: "Call before visiting", text: "87890 87326" }
 ];
@@ -67,6 +67,7 @@ const reviews = [
 
 const faqs = [
   ["Where is Keshri Gift?", "We are at Mahesh Soni Chowk, near Ujjivan Bank, Hazaribag, Jharkhand. Tap “Get directions” anywhere on this page to open Google Maps."],
+  ["What Raksha Bandhan offers are available?", "Choose either Buy 2 and Get 1 Free or save up to 30% on selected rakhis. Only one offer applies per eligible purchase; the offers cannot be combined or clubbed. Available in store while stocks last."],
   ["Can I call before visiting?", "Yes. Call us directly at 87890 87326 to ask about the current Rakhi collection or get help finding the store."],
   ["What kinds of rakhis are available?", "Our festive collection includes traditional, kids’, Rudraksha and premium combo styles. Designs and availability may vary in store."],
   ["Do you have rakhis for kids?", "Yes, kids’ rakhis are part of our Raksha Bandhan collection. Call us to check the latest available designs."],
@@ -98,7 +99,7 @@ function renderProducts() {
     <article class="product-card reveal" id="product-${product.id}">
       <div class="product-image">
         <img src="${product.image}" alt="${product.alt}" width="900" height="900" decoding="async" ${index === 0 ? "" : 'loading="lazy"'} />
-        <span class="discount-badge">In store</span>
+        <span class="discount-badge">Festive offers</span>
       </div>
       <div class="product-details">
         <div class="product-meta"><span>${product.category}</span><span>At Keshri Gift</span></div>
@@ -156,6 +157,130 @@ function initialiseAdvertisementActions() {
   document.querySelectorAll(".directions-link").forEach((link) => {
     link.addEventListener("click", () => trackEvent("open_directions", { destination: "Keshri Gift, Hazaribag" }));
   });
+
+  document.querySelectorAll(".offer-link").forEach((link) => {
+    link.addEventListener("click", () => trackEvent("view_festive_offers", { campaign: "raksha_bandhan_2026" }));
+  });
+}
+
+function initialiseOfferCarousel() {
+  const carousel = document.querySelector("[data-offer-carousel]");
+  if (!carousel) return;
+
+  const track = carousel.querySelector("[data-offer-track]");
+  const viewport = carousel.querySelector(".hero-offer-viewport");
+  const slides = [...carousel.querySelectorAll("[data-offer-slide]")];
+  const dots = [...carousel.querySelectorAll("[data-offer-dot]")];
+  const toggle = carousel.querySelector("[data-offer-toggle]");
+  const status = carousel.querySelector("[data-offer-status]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const offerNames = ["Buy 2 Get 1 Free", "Up to 30% Off"];
+  let currentIndex = 0;
+  let timer;
+  let userPaused = false;
+  let touchStartX = null;
+  let suppressSlideClick = false;
+
+  function stopAutoplay() {
+    window.clearInterval(timer);
+    timer = undefined;
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (userPaused || reducedMotion.matches || document.hidden) return;
+    timer = window.setInterval(() => showOffer(currentIndex + 1), 5500);
+  }
+
+  function showOffer(index, announce = false) {
+    currentIndex = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    slides.forEach((slide, slideIndex) => {
+      const isActive = slideIndex === currentIndex;
+      slide.tabIndex = isActive ? 0 : -1;
+      if (isActive) slide.removeAttribute("aria-hidden");
+      else slide.setAttribute("aria-hidden", "true");
+    });
+
+    dots.forEach((dot, dotIndex) => {
+      const isActive = dotIndex === currentIndex;
+      dot.classList.toggle("is-active", isActive);
+      if (isActive) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+
+    if (announce) {
+      status.textContent = `Showing offer ${currentIndex + 1} of ${slides.length}: ${offerNames[currentIndex]}`;
+      trackEvent("change_offer_slide", { offer: offerNames[currentIndex] });
+    }
+  }
+
+  function selectOffer(index) {
+    showOffer(index, true);
+    startAutoplay();
+  }
+
+  carousel.querySelector("[data-offer-prev]")?.addEventListener("click", () => selectOffer(currentIndex - 1));
+  carousel.querySelector("[data-offer-next]")?.addEventListener("click", () => selectOffer(currentIndex + 1));
+  dots.forEach((dot) => dot.addEventListener("click", () => selectOffer(Number(dot.dataset.offerDot))));
+
+  toggle?.addEventListener("click", () => {
+    userPaused = !userPaused;
+    toggle.querySelector("span").textContent = userPaused ? "▶" : "❚❚";
+    toggle.setAttribute("aria-label", userPaused ? "Start offer carousel" : "Pause offer carousel");
+    if (userPaused) stopAutoplay();
+    else startAutoplay();
+    trackEvent("toggle_offer_carousel", { state: userPaused ? "paused" : "playing" });
+  });
+
+  carousel.addEventListener("mouseenter", stopAutoplay);
+  carousel.addEventListener("mouseleave", startAutoplay);
+  carousel.addEventListener("focusin", stopAutoplay);
+  carousel.addEventListener("focusout", () => {
+    window.requestAnimationFrame(() => {
+      if (!carousel.contains(document.activeElement)) startAutoplay();
+    });
+  });
+
+  viewport.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+    stopAutoplay();
+  }, { passive: true });
+
+  viewport.addEventListener("touchend", (event) => {
+    if (touchStartX === null) return;
+    const distance = event.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(distance) > 40) {
+      suppressSlideClick = true;
+      selectOffer(currentIndex + (distance < 0 ? 1 : -1));
+      window.setTimeout(() => { suppressSlideClick = false; }, 400);
+    } else {
+      startAutoplay();
+    }
+  }, { passive: true });
+
+  viewport.addEventListener("click", (event) => {
+    if (!suppressSlideClick) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+
+  reducedMotion.addEventListener?.("change", () => {
+    carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
+    if (reducedMotion.matches) stopAutoplay();
+    else startAutoplay();
+  });
+
+  carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
+  showOffer(0);
+  startAutoplay();
 }
 
 function initialiseRevealAnimations() {
@@ -198,5 +323,6 @@ renderTrustPoints();
 renderReviews();
 renderFaqs();
 initialiseAdvertisementActions();
+initialiseOfferCarousel();
 initialiseRevealAnimations();
 captureAttribution();

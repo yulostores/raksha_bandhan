@@ -55,9 +55,10 @@ const server = http.createServer((request, response) => {
     }
 
     const extension = path.extname(filePath).toLowerCase();
+    const shouldRevalidate = [".html", ".css", ".js"].includes(extension);
     response.writeHead(200, {
       "Content-Type": mimeTypes[extension] || "application/octet-stream",
-      "Cache-Control": extension === ".html" ? "no-cache" : "public, max-age=86400"
+      "Cache-Control": shouldRevalidate ? "no-cache" : "public, max-age=86400"
     });
     response.end(request.method === "HEAD" ? undefined : data);
   });

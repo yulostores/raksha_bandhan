@@ -17,7 +17,13 @@ const mimeTypes = {
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon"
 };
-const publicFiles = new Set(["index.html", "styles.css", "script.js"]);
+const publicFiles = new Set([
+  "index.html",
+  "styles.css",
+  "script.js",
+  "privacy-policy.html",
+  "delete-account.html"
+]);
 
 const server = http.createServer((request, response) => {
   if (request.method !== "GET" && request.method !== "HEAD") {

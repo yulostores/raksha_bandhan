@@ -71,7 +71,7 @@ function initialiseScrollChoreography() {
     const scrollY = window.scrollY;
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     if (progress) progress.style.transform = `scaleX(${scrollable > 0 ? scrollY / scrollable : 0})`;
-    nav?.classList.toggle("page-nav", scrollY > 18);
+    nav?.classList.toggle("page-nav", hero ? scrollY > hero.offsetHeight - 90 : scrollY > 18);
 
     if (!reduceMotion.matches && hero && scrollY < hero.offsetHeight) {
       const ratio = Math.min(scrollY / 620, 1);
@@ -103,6 +103,8 @@ function initialiseScrollChoreography() {
 
   window.addEventListener("scroll", requestUpdate, { passive: true });
   window.addEventListener("resize", requestUpdate);
+  window.addEventListener("load", requestUpdate);
+  window.addEventListener("hashchange", requestUpdate);
   update();
 }
 

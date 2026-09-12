@@ -13,6 +13,8 @@ const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon"
@@ -21,6 +23,7 @@ const publicFiles = new Set([
   "index.html",
   "styles.css",
   "script.js",
+  "yuloStoresLogo.jpeg",
   "privacy-policy.html",
   "delete-account.html"
 ]);

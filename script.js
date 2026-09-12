@@ -1,293 +1,242 @@
-const products = [
-  {
-    id: "kundan",
-    category: "Traditional",
-    name: "Noor Kundan Rakhi",
-    note: "A graceful festive design with Kundan work and pearl-inspired details.",
-    image: "assets/rakhi-kundan.webp",
-    alt: "Traditional red and gold Kundan rakhi with pearl details"
-  },
-  {
-    id: "kids-lion",
-    category: "Kids' favourite",
-    name: "Sheru Kids Rakhi",
-    note: "A playful, colourful choice made to bring a big smile to little brothers.",
-    image: "assets/rakhi-kids.webp",
-    alt: "Colourful kids rakhi with a cheerful lion motif"
-  },
-  {
-    id: "rudraksha",
-    category: "Sacred",
-    name: "Panch Rudraksha Rakhi",
-    note: "A simple, sacred style with Rudraksha beads and a deep maroon thread.",
-    image: "assets/rakhi-rudraksha.webp",
-    alt: "Maroon rakhi with five Rudraksha beads"
-  },
-  {
-    id: "premium-combo",
-    category: "Gift combo",
-    name: "Sampoorna Rakhi Box",
-    note: "A thoughtful festive combo for when you want to gift something extra special.",
-    image: "assets/rakhi-combo.webp",
-    alt: "Premium rakhi gift combo with two rakhis, roli chawal and sweets"
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function initialiseIntro() {
+  const intro = document.querySelector(".intro");
+  let alreadySeen = false;
+  try { alreadySeen = Boolean(sessionStorage.getItem("yulo_intro_seen")); } catch { /* Optional enhancement. */ }
+  if (!intro || reduceMotion.matches || alreadySeen) return;
+
+  intro.classList.add("is-playing");
+  window.setTimeout(() => {
+    intro.classList.add("is-done");
+    try { sessionStorage.setItem("yulo_intro_seen", "true"); } catch { /* Optional enhancement. */ }
+  }, 1050);
+}
+
+function initialiseReveals() {
+  const elements = document.querySelectorAll(".reveal");
+
+  if (!("IntersectionObserver" in window) || reduceMotion.matches) {
+    elements.forEach((element) => element.classList.add("is-visible"));
+    return;
   }
-];
 
-const categories = [
-  { name: "Traditional Rakhis", note: "Timeless artistry", image: "assets/rakhi-kundan.webp", productId: "kundan" },
-  { name: "Kids’ Rakhis", note: "Big little smiles", image: "assets/rakhi-kids.webp", productId: "kids-lion" },
-  { name: "Rudraksha Rakhis", note: "Blessings, always", image: "assets/rakhi-rudraksha.webp", productId: "rudraksha" },
-  { name: "Premium Combos", note: "A complete shagun", image: "assets/rakhi-combo.webp", productId: "premium-combo" }
-];
-
-const trustPoints = [
-  { icon: "✦", title: "Festive variety", text: "Styles for every bond" },
-  { icon: "%", title: "Festive offers", text: "Save up to 30%" },
-  { icon: "⌖", title: "Easy to find", text: "Near Ujjivan Bank" },
-  { icon: "☎", title: "Call before visiting", text: "87890 87326" }
-];
-
-const reviews = [
-  {
-    icon: "◉",
-    title: "See every detail",
-    text: "Compare colours, threads and finishes up close before choosing the rakhi that feels right."
-  },
-  {
-    icon: "✦",
-    title: "Something for everyone",
-    text: "Explore traditional, kids’, Rudraksha and premium combo options together in one place."
-  },
-  {
-    icon: "☎",
-    title: "Help is one call away",
-    text: "Call us before you leave to ask about the collection, location or current availability."
-  }
-];
-
-const faqs = [
-  ["Where is Keshri Gift?", "We are at Mahesh Soni Chowk, near Ujjivan Bank, Hazaribag, Jharkhand. Tap “Get directions” anywhere on this page to open Google Maps."],
-  ["What Raksha Bandhan offers are available?", "Choose either Buy 2 and Get 1 Free or save up to 30% on selected rakhis. Only one offer applies per eligible purchase; the offers cannot be combined or clubbed. Available in store while stocks last."],
-  ["Can I call before visiting?", "Yes. Call us directly at 87890 87326 to ask about the current Rakhi collection or get help finding the store."],
-  ["What kinds of rakhis are available?", "Our festive collection includes traditional, kids’, Rudraksha and premium combo styles. Designs and availability may vary in store."],
-  ["Do you have rakhis for kids?", "Yes, kids’ rakhis are part of our Raksha Bandhan collection. Call us to check the latest available designs."],
-  ["Can I find premium gift combos?", "Yes, premium Rakhi combo options are available as part of the festive collection, subject to current stock."],
-  ["How can I get directions?", "Use the Google Maps button on this page. It will guide you to Keshri Gift at Mahesh Soni Chowk near Ujjivan Bank." ]
-];
-
-const icons = {
-  arrow: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" /></svg>',
-  plus: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12" /></svg>'
-};
-
-function renderCategories() {
-  const grid = document.querySelector("#category-grid");
-  grid.innerHTML = categories.map((category, index) => `
-    <button class="category-card reveal" type="button" data-product="${category.productId}" aria-label="View ${category.name}">
-      <img src="${category.image}" alt="" width="900" height="900" loading="lazy" decoding="async" />
-      <span class="category-index">0${index + 1}</span>
-      <span class="category-copy"><small>${category.note}</small><strong>${category.name}</strong></span>
-      <span class="category-arrow">${icons.arrow}</span>
-    </button>
-  `).join("");
-}
-
-function renderProducts() {
-  const grid = document.querySelector("#product-grid");
-
-  grid.innerHTML = products.map((product, index) => `
-    <article class="product-card reveal" id="product-${product.id}">
-      <div class="product-image">
-        <img src="${product.image}" alt="${product.alt}" width="900" height="900" decoding="async" ${index === 0 ? "" : 'loading="lazy"'} />
-        <span class="discount-badge">Festive offers</span>
-      </div>
-      <div class="product-details">
-        <div class="product-meta"><span>${product.category}</span><span>At Keshri Gift</span></div>
-        <h3>${product.name}</h3>
-        <p class="product-note">${product.note}</p>
-        <a class="button product-buy call-link" href="tel:+918789087326" data-enquire="${product.id}">Call to enquire <span aria-hidden="true">☎</span></a>
-      </div>
-    </article>
-  `).join("");
-}
-
-function renderTrustPoints() {
-  document.querySelector("#trust-grid").innerHTML = trustPoints.map((point) => `
-    <div class="trust-point">
-      <span class="trust-icon" aria-hidden="true">${point.icon}</span>
-      <p><strong>${point.title}</strong><small>${point.text}</small></p>
-    </div>
-  `).join("");
-}
-
-function renderReviews() {
-  document.querySelector("#review-grid").innerHTML = reviews.map((review) => `
-    <article class="review-card benefit-card reveal">
-      <span class="benefit-icon" aria-hidden="true">${review.icon}</span>
-      <h3>${review.title}</h3>
-      <p>${review.text}</p>
-    </article>
-  `).join("");
-}
-
-function renderFaqs() {
-  document.querySelector("#faq-list").innerHTML = faqs.map(([question, answer], index) => `
-    <details class="faq-item reveal" ${index === 0 ? "open" : ""}>
-      <summary><span>${question}</span><b aria-hidden="true">${icons.plus}</b></summary>
-      <p>${answer}</p>
-    </details>
-  `).join("");
-}
-
-function initialiseAdvertisementActions() {
-  document.addEventListener("click", (event) => {
-    const category = event.target.closest(".category-card[data-product]");
-    if (category) {
-      document.querySelector(`#product-${category.dataset.product}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-      trackEvent("view_rakhi_category", { product_id: category.dataset.product });
-    }
-  });
-
-  document.querySelectorAll(".call-link").forEach((link) => {
-    link.addEventListener("click", () => {
-      trackEvent("call_store", { phone: "+918789087326", product_id: link.dataset.enquire || undefined });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
     });
-  });
+  }, { rootMargin: "0px 0px -8%", threshold: 0.08 });
 
-  document.querySelectorAll(".directions-link").forEach((link) => {
-    link.addEventListener("click", () => trackEvent("open_directions", { destination: "Keshri Gift, Hazaribag" }));
-  });
-
-  document.querySelectorAll(".offer-link").forEach((link) => {
-    link.addEventListener("click", () => trackEvent("view_festive_offers", { campaign: "raksha_bandhan_2026" }));
+  elements.forEach((element) => {
+    const isInitiallyVisible = element.getBoundingClientRect().top < window.innerHeight * 0.92;
+    if (isInitiallyVisible) {
+      element.classList.add("is-visible");
+      return;
+    }
+    element.classList.add("will-reveal");
+    observer.observe(element);
   });
 }
 
-function initialiseOfferCarousel() {
-  const carousel = document.querySelector("[data-offer-carousel]");
-  if (!carousel) return;
+function initialiseHeroMotion() {
+  const hero = document.querySelector(".hero");
+  const food = document.querySelector(".hero-food");
+  if (!hero || !food || reduceMotion.matches) return;
 
-  const track = carousel.querySelector("[data-offer-track]");
-  const viewport = carousel.querySelector(".hero-offer-viewport");
-  const slides = [...carousel.querySelectorAll("[data-offer-slide]")];
-  const dots = [...carousel.querySelectorAll("[data-offer-dot]")];
-  const toggle = carousel.querySelector("[data-offer-toggle]");
-  const status = carousel.querySelector("[data-offer-status]");
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const offerNames = ["Buy 2 Get 1 Free", "Up to 30% Off"];
-  let currentIndex = 0;
+  hero.addEventListener("pointermove", (event) => {
+    if (event.pointerType === "touch") return;
+    const x = (event.clientX / window.innerWidth - 0.5) * 10;
+    const y = (event.clientY / window.innerHeight - 0.5) * 6;
+    food.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.015)`;
+  });
+
+  hero.addEventListener("pointerleave", () => {
+    food.style.transform = "translate3d(0, 0, 0) scale(1)";
+  });
+}
+
+function initialiseScrollChoreography() {
+  const progress = document.querySelector(".scroll-progress span");
+  const hero = document.querySelector(".hero");
+  const heroContent = document.querySelector(".hero-copy");
+  const heroFood = document.querySelector(".hero-food");
+  const heroProduct = document.querySelector(".hero-product");
+  const nav = document.querySelector(".nav");
+  const demoPulse = document.querySelector(".demo-pulse");
+  let ticking = false;
+
+  function update() {
+    const scrollY = window.scrollY;
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) progress.style.transform = `scaleX(${scrollable > 0 ? scrollY / scrollable : 0})`;
+    nav?.classList.toggle("page-nav", scrollY > 18);
+
+    if (!reduceMotion.matches && hero && scrollY < hero.offsetHeight) {
+      const ratio = Math.min(scrollY / 620, 1);
+      if (heroContent) {
+        heroContent.style.transform = `translate3d(0, ${scrollY * 0.18}px, 0)`;
+        heroContent.style.opacity = String(1 - ratio * 0.72);
+      }
+      if (heroProduct) {
+        heroProduct.style.transform = `translate3d(0, ${scrollY * 0.09}px, 0)`;
+        heroProduct.style.opacity = String(1 - ratio * 0.35);
+      }
+      if (heroFood) heroFood.style.translate = `0 ${scrollY * 0.055}px`;
+    }
+
+    if (!reduceMotion.matches && demoPulse) {
+      const rect = demoPulse.getBoundingClientRect();
+      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) / window.innerHeight;
+      demoPulse.style.translate = `0 ${Math.max(-14, Math.min(14, offset * -18))}px`;
+    }
+
+    ticking = false;
+  }
+
+  function requestUpdate() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  update();
+}
+
+function initialiseCounters() {
+  const counters = document.querySelectorAll("[data-target]");
+  if (!counters.length || reduceMotion.matches || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const element = entry.target;
+      const target = Number(element.dataset.target);
+      const suffix = element.dataset.suffix || "";
+      const start = performance.now();
+      const duration = 1300;
+
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+        element.textContent = `${value.toLocaleString("en-IN")}${suffix}`;
+        if (progress < 1) window.requestAnimationFrame(step);
+      }
+
+      window.requestAnimationFrame(step);
+      observer.unobserve(element);
+    });
+  }, { threshold: 0.55 });
+
+  counters.forEach((counter) => observer.observe(counter));
+}
+
+function initialiseModuleTour() {
+  const tabs = [...document.querySelectorAll("[data-module]")];
+  const stage = document.querySelector("[data-module-stage]");
+  if (!tabs.length || !stage) return;
+
+  const content = {
+    orders: { icon: "▤", kicker: "ORDERS & POS", title: "Every order. One clear queue.", copy: "Accept dine-in, takeaway and online orders without switching screens or losing context.", summary: [["NEW", "08"], ["PREPARING", "12"], ["READY", "05"]], cards: [["#1843", "Table 4", "Paneer tikka × 2", "NEW"], ["#1842", "Delivery", "Dal bowl · Naan", "COOKING"], ["#1841", "Takeaway", "Biryani family pack", "READY"]], points: ["Works online and offline", "Integrated payments", "Aggregator sync"] },
+    kitchen: { icon: "◫", kicker: "KITCHEN DISPLAY", title: "A calmer kitchen at full speed.", copy: "Route items to the right prep station and keep every cook aligned with live ticket timing.", summary: [["ON TIME", "91%"], ["COOKING", "12"], ["AVG PREP", "18m"]], cards: [["KOT 842", "Hot kitchen", "2 dishes · 08:14", "COOKING"], ["KOT 843", "Tandoor", "3 dishes · 05:22", "ON TIME"], ["KOT 844", "Beverage", "2 drinks · 02:08", "NEW"]], points: ["Station-based routing", "Live preparation timers", "Course management"] },
+    inventory: { icon: "◈", kicker: "INVENTORY & PURCHASE", title: "Know what you have—and what it costs.", copy: "Track ingredients by recipe, automate stock deduction and create smarter purchase plans.", summary: [["FOOD COST", "31.2%"], ["LOW STOCK", "03"], ["WASTE", "↓ 8%"]], cards: [["SKU 028", "Paneer", "14 portions left", "LOW"], ["SKU 112", "Basmati rice", "42.8 kg available", "HEALTHY"], ["PO 018", "Fresh produce", "Arriving tomorrow", "ORDERED"]], points: ["Recipe-level consumption", "Vendor purchase orders", "Waste tracking"] },
+    customers: { icon: "♡", kicker: "CRM & LOYALTY", title: "Make every guest feel remembered.", copy: "Bring visits, preferences, feedback and rewards together for genuinely personal hospitality.", summary: [["RETURNING", "42%"], ["MEMBERS", "8.4K"], ["RATING", "4.8"]], cards: [["GUEST", "Aarav Mehta", "12 visits · Loves spicy", "REGULAR"], ["CAMPAIGN", "Weekend regulars", "612 guests reached", "LIVE"], ["REWARD", "Free dessert", "184 redemptions", "POPULAR"]], points: ["Unified guest profiles", "Flexible loyalty rules", "Targeted campaigns"] },
+    team: { icon: "☺", kicker: "TEAM & SHIFTS", title: "Everyone knows their next move.", copy: "Plan shifts, control permissions and help managers run consistent service across outlets.", summary: [["ON SHIFT", "18"], ["CLOCKED IN", "17"], ["LABOUR", "12.6%"]], cards: [["SERVICE", "Dinner floor", "6 team members", "READY"], ["KITCHEN", "Hot + cold line", "8 team members", "ACTIVE"], ["SHIFT", "Tomorrow", "2 open positions", "REVIEW"]], points: ["Attendance and shifts", "Role-based access", "Performance visibility"] },
+    analytics: { icon: "⌁", kicker: "REPORTS & ANALYTICS", title: "Answers before you need to ask.", copy: "See sales, margins, menu performance and outlet trends in clear, decision-ready reports.", summary: [["NET SALES", "₹4.82L"], ["MARGIN", "18.4%"], ["AOV", "₹684"]], cards: [["INSIGHT", "Dinner growing", "+12.4% week on week", "POSITIVE"], ["MENU", "Paneer platter", "Top contribution item", "STAR"], ["OUTLET", "Indiranagar", "Leading by 8.2%", "TOP"]], points: ["Live profit snapshots", "Menu engineering", "Multi-outlet comparison"] }
+  };
+  let activeIndex = 0;
   let timer;
-  let userPaused = false;
-  let touchStartX = null;
-  let suppressSlideClick = false;
 
-  function stopAutoplay() {
+  function select(index, userInitiated = false) {
+    activeIndex = (index + tabs.length) % tabs.length;
+    const tab = tabs[activeIndex];
+    const values = content[tab.dataset.module];
+    const visual = stage.querySelector("[data-stage-visual]");
+    tabs.forEach((item, itemIndex) => {
+      const isActive = itemIndex === activeIndex;
+      item.classList.toggle("is-active", isActive);
+      item.setAttribute("aria-selected", String(isActive));
+    });
+    stage.querySelector("[data-stage-icon]").textContent = values.icon;
+    stage.querySelector("[data-stage-kicker]").textContent = values.kicker;
+    stage.querySelector("[data-stage-title]").textContent = values.title;
+    stage.querySelector("[data-stage-copy]").textContent = values.copy;
+    ["one", "two", "three"].forEach((key, pointIndex) => { stage.querySelector(`[data-point-${key}]`).textContent = values.points[pointIndex]; });
+    visual.classList.add("is-changing");
+    window.setTimeout(() => {
+      visual.dataset.stageVisual = tab.dataset.module;
+      visual.innerHTML = `<div class="visual-summary">${values.summary.map(([label, value]) => `<article><small>${label}</small><strong>${value}</strong></article>`).join("")}</div><div class="visual-board">${values.cards.map(([number, title, detail, state]) => `<article><span>${number}</span><b>${title}</b><small>${detail}</small><i>${state}</i></article>`).join("")}</div>`;
+      visual.classList.remove("is-changing");
+    }, reduceMotion.matches ? 0 : 180);
+    if (userInitiated) trackEvent("view_platform_module", { module: tab.dataset.module });
+  }
+
+  function start() {
     window.clearInterval(timer);
-    timer = undefined;
+    if (reduceMotion.matches || document.hidden) return;
+    timer = window.setInterval(() => select(activeIndex + 1), 5200);
   }
 
-  function startAutoplay() {
-    stopAutoplay();
-    if (userPaused || reducedMotion.matches || document.hidden) return;
-    timer = window.setInterval(() => showOffer(currentIndex + 1), 5500);
-  }
-
-  function showOffer(index, announce = false) {
-    currentIndex = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-    slides.forEach((slide, slideIndex) => {
-      const isActive = slideIndex === currentIndex;
-      slide.tabIndex = isActive ? 0 : -1;
-      if (isActive) slide.removeAttribute("aria-hidden");
-      else slide.setAttribute("aria-hidden", "true");
-    });
-
-    dots.forEach((dot, dotIndex) => {
-      const isActive = dotIndex === currentIndex;
-      dot.classList.toggle("is-active", isActive);
-      if (isActive) dot.setAttribute("aria-current", "true");
-      else dot.removeAttribute("aria-current");
-    });
-
-    if (announce) {
-      status.textContent = `Showing offer ${currentIndex + 1} of ${slides.length}: ${offerNames[currentIndex]}`;
-      trackEvent("change_offer_slide", { offer: offerNames[currentIndex] });
-    }
-  }
-
-  function selectOffer(index) {
-    showOffer(index, true);
-    startAutoplay();
-  }
-
-  carousel.querySelector("[data-offer-prev]")?.addEventListener("click", () => selectOffer(currentIndex - 1));
-  carousel.querySelector("[data-offer-next]")?.addEventListener("click", () => selectOffer(currentIndex + 1));
-  dots.forEach((dot) => dot.addEventListener("click", () => selectOffer(Number(dot.dataset.offerDot))));
-
-  toggle?.addEventListener("click", () => {
-    userPaused = !userPaused;
-    toggle.querySelector("span").textContent = userPaused ? "▶" : "❚❚";
-    toggle.setAttribute("aria-label", userPaused ? "Start offer carousel" : "Pause offer carousel");
-    if (userPaused) stopAutoplay();
-    else startAutoplay();
-    trackEvent("toggle_offer_carousel", { state: userPaused ? "paused" : "playing" });
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => { select(index, true); start(); });
   });
-
-  carousel.addEventListener("mouseenter", stopAutoplay);
-  carousel.addEventListener("mouseleave", startAutoplay);
-  carousel.addEventListener("focusin", stopAutoplay);
-  carousel.addEventListener("focusout", () => {
-    window.requestAnimationFrame(() => {
-      if (!carousel.contains(document.activeElement)) startAutoplay();
-    });
-  });
-
-  viewport.addEventListener("touchstart", (event) => {
-    touchStartX = event.changedTouches[0].clientX;
-    stopAutoplay();
-  }, { passive: true });
-
-  viewport.addEventListener("touchend", (event) => {
-    if (touchStartX === null) return;
-    const distance = event.changedTouches[0].clientX - touchStartX;
-    touchStartX = null;
-    if (Math.abs(distance) > 40) {
-      suppressSlideClick = true;
-      selectOffer(currentIndex + (distance < 0 ? 1 : -1));
-      window.setTimeout(() => { suppressSlideClick = false; }, 400);
-    } else {
-      startAutoplay();
-    }
-  }, { passive: true });
-
-  viewport.addEventListener("click", (event) => {
-    if (!suppressSlideClick) return;
-    event.preventDefault();
-    event.stopPropagation();
-  }, true);
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopAutoplay();
-    else startAutoplay();
-  });
-
-  reducedMotion.addEventListener?.("change", () => {
-    carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
-    if (reducedMotion.matches) stopAutoplay();
-    else startAutoplay();
-  });
-
-  carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
-  showOffer(0);
-  startAutoplay();
+  document.querySelector(".platform-layout")?.addEventListener("mouseenter", () => window.clearInterval(timer));
+  document.querySelector(".platform-layout")?.addEventListener("mouseleave", start);
+  document.addEventListener("visibilitychange", start);
+  select(0);
+  start();
 }
 
-function initialiseRevealAnimations() {
-  // Content must never depend on an animation callback to become readable.
-  // Some embedded browser previews do not reliably deliver IntersectionObserver
-  // events, which previously left most of the desktop page at opacity: 0.
-  document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
+function initialiseDemoForm() {
+  const form = document.querySelector("[data-demo-form]");
+  const success = document.querySelector("[data-form-success]");
+  if (!form || !success) return;
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = new FormData(form);
+    const subject = encodeURIComponent(`YuloStores demo request — ${data.get("restaurant")}`);
+    const body = encodeURIComponent(`Name: ${data.get("name")}\nRestaurant: ${data.get("restaurant")}\nPhone: ${data.get("phone")}\nOutlets: ${data.get("outlets")}`);
+    success.hidden = false;
+    form.hidden = true;
+    trackEvent("request_demo", { outlets: data.get("outlets") });
+    window.location.href = `mailto:yulostoresdeveloper@gmail.com?subject=${subject}&body=${body}`;
+  });
+}
+
+function initialiseTracking() {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a");
+    if (!link) return;
+
+    const href = link.getAttribute("href") || "";
+    if (href === "#") event.preventDefault();
+
+    if (href.includes("demo")) {
+      trackEvent("demo_cta_click", { label: link.textContent.trim() });
+    } else if (href.startsWith("mailto:")) {
+      trackEvent("partner_contact", { destination: href });
+    }
+  });
+}
+
+function initialiseNavigationState() {
+  const links = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const sections = links.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+  if (!links.length || !sections.length || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!visible) return;
+    links.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${visible.target.id}`));
+  }, { rootMargin: "-25% 0px -60%", threshold: [0, 0.1, 0.4] });
+
+  sections.forEach((section) => observer.observe(section));
 }
 
 function captureAttribution() {
@@ -298,31 +247,33 @@ function captureAttribution() {
         if (params.has(key)) result[key] = params.get(key);
         return result;
       }, {});
-    if (Object.keys(attribution).length) sessionStorage.setItem("keshri_gift_attribution", JSON.stringify(attribution));
+    if (Object.keys(attribution).length) {
+      sessionStorage.setItem("yulo_stores_attribution", JSON.stringify(attribution));
+    }
   } catch {
-    // Some browsers restrict storage when the HTML file is opened directly.
+    // The landing experience remains usable when browser storage is unavailable.
   }
 }
 
-// Analytics integration point. Replace the console call with Meta Pixel and GA4 events before launch.
 function trackEvent(eventName, properties = {}) {
   let attribution = {};
   try {
-    attribution = JSON.parse(sessionStorage.getItem("keshri_gift_attribution") || "{}");
+    attribution = JSON.parse(sessionStorage.getItem("yulo_stores_attribution") || "{}");
   } catch {
-    // Analytics attribution is optional; calls and directions must still work.
+    // Analytics is optional and must never block navigation.
   }
   console.info("[analytics]", eventName, { ...properties, ...attribution });
   // window.fbq?.("trackCustom", eventName, { ...properties, ...attribution });
   // window.gtag?.("event", eventName, { ...properties, ...attribution });
 }
 
-renderCategories();
-renderProducts();
-renderTrustPoints();
-renderReviews();
-renderFaqs();
-initialiseAdvertisementActions();
-initialiseOfferCarousel();
-initialiseRevealAnimations();
 captureAttribution();
+initialiseIntro();
+initialiseReveals();
+initialiseHeroMotion();
+initialiseScrollChoreography();
+initialiseCounters();
+initialiseModuleTour();
+initialiseDemoForm();
+initialiseTracking();
+initialiseNavigationState();

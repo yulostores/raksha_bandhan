@@ -76,12 +76,12 @@ server.on("error", (error) => {
   } else if (error.code === "EACCES") {
     console.error(`Permission denied while trying to use ${host}:${port}.`);
   } else {
-    console.error("Unable to start the Keshri Gift website:", error.message);
+    console.error("Unable to start the Yulo Stores website:", error.message);
   }
   process.exitCode = 1;
 });
 
 server.listen(port, host, () => {
-  console.log(`Keshri Gift website is ready at http://localhost:${port}`);
+  console.log(`Yulo Stores website is ready at http://localhost:${port}`);
   console.log(`Listening on ${host}:${port} so the site can be opened from previews and other devices.`);
 });

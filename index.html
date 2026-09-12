@@ -24,7 +24,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Gloock&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260816-2" />
+    <link rel="stylesheet" href="styles.css?v=20260816-5" />
 
     <!-- Meta Pixel placeholder: paste the base pixel code here before launch. -->
     <!-- Google Analytics placeholder: add the GA4 gtag script and measurement ID here. -->
@@ -76,10 +76,69 @@
         <div class="hero-copy reveal">
           <p class="eyebrow"><span></span> Raksha Bandhan collection 2026</p>
           <h1 id="hero-title">Rakhi jo <em>dil se</em><br />chuni ho.</h1>
-          <p class="hero-description">
-            Discover beautiful rakhis for every brother—traditional, playful, sacred and premium—all
-            waiting for you at Keshri Gift, Hazaribag.
-          </p>
+          <div
+            class="hero-rakhi-carousel"
+            data-rakhi-carousel
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Featured Rakhi collection"
+          >
+            <div class="hero-rakhi-header">
+              <p><span aria-hidden="true">✦</span> Pick his kind</p>
+              <div class="hero-rakhi-controls" aria-label="Rakhi carousel controls">
+                <button type="button" data-rakhi-toggle aria-label="Pause rakhi carousel"><span aria-hidden="true">❚❚</span></button>
+                <button type="button" data-rakhi-prev aria-label="Show previous rakhi"><span aria-hidden="true">←</span></button>
+                <button type="button" data-rakhi-next aria-label="Show next rakhi"><span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <div class="hero-rakhi-viewport" data-rakhi-viewport tabindex="0">
+              <div class="hero-rakhi-track">
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Kundan rakhi" data-product="kundan" href="#product-kundan" aria-label="Traditional Kundan rakhi, slide 1 of 7">
+                  <img src="assets/rakhi-kundan.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-tag">Bestseller</span>
+                  <span class="hero-rakhi-name"><small>Traditional</small><strong>Kundan</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Kids rakhi" data-product="kids-lion" href="#product-kids-lion" aria-label="Colourful kids rakhi, slide 2 of 7">
+                  <img src="assets/rakhi-kids.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-name"><small>Playful</small><strong>For kids</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Pearl rakhi" data-product="pearl" href="#product-pearl" aria-label="Pearl and gold rakhi, slide 3 of 7">
+                  <img src="assets/rakhi-pearl.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-name"><small>Elegant</small><strong>Pearl</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Rudraksha rakhi" data-product="rudraksha" href="#product-rudraksha" aria-label="Sacred Rudraksha rakhi, slide 4 of 7">
+                  <img src="assets/rakhi-rudraksha.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-name"><small>Sacred</small><strong>Rudraksha</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Peacock meenakari rakhi" data-product="peacock" href="#product-peacock" aria-label="Peacock meenakari rakhi, slide 5 of 7">
+                  <img src="assets/rakhi-peacock.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-tag">New style</span>
+                  <span class="hero-rakhi-name"><small>Colourful</small><strong>Meenakari</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Bhaiya Bhabhi rakhi set" data-product="bhaiya-bhabhi" href="#product-bhaiya-bhabhi" aria-label="Bhaiya Bhabhi rakhi set, slide 6 of 7">
+                  <img src="assets/rakhi-bhaiya-bhabhi.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-name"><small>For the couple</small><strong>Bhaiya–Bhabhi</strong></span>
+                </a>
+                <a class="hero-rakhi-slide" data-rakhi-slide data-rakhi-name="Premium gift combo" data-product="premium-combo" href="#product-premium-combo" aria-label="Premium Rakhi gift combo, slide 7 of 7">
+                  <img src="assets/rakhi-combo.webp" alt="" width="900" height="900" decoding="async" />
+                  <span class="hero-rakhi-name"><small>Premium</small><strong>Gift combo</strong></span>
+                </a>
+              </div>
+            </div>
+            <div class="hero-rakhi-footer">
+              <div class="hero-rakhi-dots" aria-label="Choose a rakhi style">
+                <button class="is-active" type="button" data-rakhi-dot="0" aria-label="Show Kundan rakhi" aria-current="true"></button>
+                <button type="button" data-rakhi-dot="1" aria-label="Show kids rakhi"></button>
+                <button type="button" data-rakhi-dot="2" aria-label="Show pearl rakhi"></button>
+                <button type="button" data-rakhi-dot="3" aria-label="Show Rudraksha rakhi"></button>
+                <button type="button" data-rakhi-dot="4" aria-label="Show peacock meenakari rakhi"></button>
+                <button type="button" data-rakhi-dot="5" aria-label="Show Bhaiya Bhabhi rakhi set"></button>
+                <button type="button" data-rakhi-dot="6" aria-label="Show premium gift combo"></button>
+              </div>
+              <a href="#products">See all rakhis <span aria-hidden="true">↘</span></a>
+            </div>
+            <span class="sr-only" data-rakhi-status aria-live="polite"></span>
+          </div>
           <div
             class="hero-offer-carousel"
             data-offer-carousel
@@ -344,6 +403,6 @@
 
     <a class="mobile-sticky call-link" href="tel:+918789087326"><span>Buy 2 Get 1 or up to 30% off</span><strong><i aria-hidden="true">☎</i> Call now</strong></a>
 
-    <script src="script.js?v=20260816-2" defer></script>
+    <script src="script.js?v=20260816-5" defer></script>
   </body>
 </html>

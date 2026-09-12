@@ -16,12 +16,36 @@ const products = [
     alt: "Colourful kids rakhi with a cheerful lion motif"
   },
   {
+    id: "pearl",
+    category: "Elegant",
+    name: "Moti Phool Rakhi",
+    note: "A refined pearl-and-gold style with a soft ivory thread for an understated festive look.",
+    image: "assets/rakhi-pearl.webp",
+    alt: "Ivory thread rakhi with a pearl and gold floral centre"
+  },
+  {
     id: "rudraksha",
     category: "Sacred",
     name: "Panch Rudraksha Rakhi",
     note: "A simple, sacred style with Rudraksha beads and a deep maroon thread.",
     image: "assets/rakhi-rudraksha.webp",
     alt: "Maroon rakhi with five Rudraksha beads"
+  },
+  {
+    id: "peacock",
+    category: "Meenakari",
+    name: "Mor Meenakari Rakhi",
+    note: "A vivid peacock-inspired design in festive blue, teal and antique-gold tones.",
+    image: "assets/rakhi-peacock.webp",
+    alt: "Blue and teal peacock meenakari rakhi with braided thread"
+  },
+  {
+    id: "bhaiya-bhabhi",
+    category: "Couple set",
+    name: "Bhaiya–Bhabhi Rakhi Set",
+    note: "A coordinated rakhi and lumba pairing designed to celebrate them together.",
+    image: "assets/rakhi-bhaiya-bhabhi.webp",
+    alt: "Coordinated maroon and gold Bhaiya Bhabhi rakhi set"
   },
   {
     id: "premium-combo",
@@ -56,7 +80,7 @@ const reviews = [
   {
     icon: "✦",
     title: "Something for everyone",
-    text: "Explore traditional, kids’, Rudraksha and premium combo options together in one place."
+    text: "Explore traditional, kids’, pearl, Meenakari, Rudraksha and couple-set options in one place."
   },
   {
     icon: "☎",
@@ -69,7 +93,7 @@ const faqs = [
   ["Where is Keshri Gift?", "We are at Mahesh Soni Chowk, near Ujjivan Bank, Hazaribag, Jharkhand. Tap “Get directions” anywhere on this page to open Google Maps."],
   ["What Raksha Bandhan offers are available?", "Choose either Buy 2 and Get 1 Free or save up to 30% on selected rakhis. Only one offer applies per eligible purchase; the offers cannot be combined or clubbed. Available in store while stocks last."],
   ["Can I call before visiting?", "Yes. Call us directly at 87890 87326 to ask about the current Rakhi collection or get help finding the store."],
-  ["What kinds of rakhis are available?", "Our festive collection includes traditional, kids’, Rudraksha and premium combo styles. Designs and availability may vary in store."],
+  ["What kinds of rakhis are available?", "Our festive collection includes traditional, kids’, pearl, Meenakari, Rudraksha, Bhaiya–Bhabhi and premium combo styles. Designs and availability may vary in store."],
   ["Do you have rakhis for kids?", "Yes, kids’ rakhis are part of our Raksha Bandhan collection. Call us to check the latest available designs."],
   ["Can I find premium gift combos?", "Yes, premium Rakhi combo options are available as part of the festive collection, subject to current stock."],
   ["How can I get directions?", "Use the Google Maps button on this page. It will guide you to Keshri Gift at Mahesh Soni Chowk near Ujjivan Bank." ]
@@ -146,6 +170,11 @@ function initialiseAdvertisementActions() {
       document.querySelector(`#product-${category.dataset.product}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
       trackEvent("view_rakhi_category", { product_id: category.dataset.product });
     }
+
+    const featuredRakhi = event.target.closest(".hero-rakhi-slide[data-product]");
+    if (featuredRakhi) {
+      trackEvent("view_featured_rakhi", { product_id: featuredRakhi.dataset.product });
+    }
   });
 
   document.querySelectorAll(".call-link").forEach((link) => {
@@ -160,6 +189,221 @@ function initialiseAdvertisementActions() {
 
   document.querySelectorAll(".offer-link").forEach((link) => {
     link.addEventListener("click", () => trackEvent("view_festive_offers", { campaign: "raksha_bandhan_2026" }));
+  });
+}
+
+function initialiseRakhiCarousel() {
+  const carousel = document.querySelector("[data-rakhi-carousel]");
+  if (!carousel) return;
+
+  const viewport = carousel.querySelector("[data-rakhi-viewport]");
+  const track = carousel.querySelector(".hero-rakhi-track");
+  const slides = [...carousel.querySelectorAll("[data-rakhi-slide]")];
+  const dots = [...carousel.querySelectorAll("[data-rakhi-dot]")];
+  const toggle = carousel.querySelector("[data-rakhi-toggle]");
+  const status = carousel.querySelector("[data-rakhi-status]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (!track || !slides.length) return;
+
+  slides.forEach((slide, index) => {
+    slide.dataset.loopIndex = String(index);
+  });
+
+  function cloneSlide(slide, index) {
+    const clone = slide.cloneNode(true);
+    clone.dataset.rakhiClone = "";
+    clone.dataset.loopIndex = String(index);
+    clone.setAttribute("aria-hidden", "true");
+    clone.tabIndex = -1;
+    return clone;
+  }
+
+  const leadingClones = slides.map(cloneSlide);
+  const trailingClones = slides.map(cloneSlide);
+  track.prepend(...leadingClones);
+  track.append(...trailingClones);
+
+  const loopSlides = [...track.querySelectorAll("[data-rakhi-slide]")];
+  const names = slides.map((slide) => slide.dataset.rakhiName);
+  let currentIndex = -1;
+  let scrollFrame;
+  let autoplayFrame;
+  let lastAutoplayTime;
+  let firstOriginalLeft = 0;
+  let loopWidth = 0;
+  let userPaused = false;
+  let isHovered = false;
+
+  function measureLoop() {
+    firstOriginalLeft = slides[0].offsetLeft;
+    loopWidth = trailingClones[0].offsetLeft - firstOriginalLeft;
+  }
+
+  function normaliseScroll() {
+    if (!loopWidth) return;
+    if (viewport.scrollLeft < firstOriginalLeft) {
+      viewport.scrollLeft += loopWidth;
+    } else if (viewport.scrollLeft >= firstOriginalLeft + loopWidth) {
+      viewport.scrollLeft -= loopWidth;
+    }
+  }
+
+  function stopAutoplay() {
+    window.cancelAnimationFrame(autoplayFrame);
+    autoplayFrame = undefined;
+    lastAutoplayTime = undefined;
+    carousel.classList.remove("is-auto-scrolling");
+  }
+
+  function autoplay(timestamp) {
+    if (lastAutoplayTime !== undefined) {
+      const elapsed = Math.min(timestamp - lastAutoplayTime, 64);
+      viewport.scrollLeft += elapsed * 0.028;
+      normaliseScroll();
+    }
+    lastAutoplayTime = timestamp;
+    autoplayFrame = window.requestAnimationFrame(autoplay);
+  }
+
+  function startAutoplay(force = false) {
+    stopAutoplay();
+    if (
+      userPaused ||
+      reducedMotion.matches ||
+      document.hidden ||
+      (!force && (carousel.contains(document.activeElement) || isHovered))
+    ) return;
+    carousel.classList.add("is-auto-scrolling");
+    autoplayFrame = window.requestAnimationFrame(autoplay);
+  }
+
+  function updateCarousel(index, announce = false) {
+    const nextIndex = (index + slides.length) % slides.length;
+    if (currentIndex === nextIndex && !announce) return;
+    currentIndex = nextIndex;
+    dots.forEach((dot, dotIndex) => {
+      const isActive = dotIndex === currentIndex;
+      dot.classList.toggle("is-active", isActive);
+      if (isActive) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+
+    if (announce) {
+      status.textContent = `Showing ${names[currentIndex]}, ${currentIndex + 1} of ${slides.length}`;
+      trackEvent("change_rakhi_slide", { product_id: slides[currentIndex].dataset.product });
+    }
+  }
+
+  function updateCarouselFromPosition() {
+    const viewportStart = viewport.getBoundingClientRect().left;
+    const nearest = loopSlides.reduce((result, slide) => {
+      const distance = Math.abs(slide.getBoundingClientRect().left - viewportStart);
+      return distance < result.distance ? { slide, distance } : result;
+    }, { slide: loopSlides[0], distance: Infinity });
+    updateCarousel(Number(nearest.slide.dataset.loopIndex));
+  }
+
+  function findTargetSlide(index, direction = 0) {
+    const nextIndex = (index + slides.length) % slides.length;
+    const candidates = loopSlides.filter((slide) => Number(slide.dataset.loopIndex) === nextIndex);
+    const currentLeft = viewport.scrollLeft;
+    const directionalCandidates = direction > 0
+      ? candidates.filter((slide) => slide.offsetLeft > currentLeft + 2)
+      : direction < 0
+        ? candidates.filter((slide) => slide.offsetLeft < currentLeft - 2)
+        : candidates;
+    const pool = directionalCandidates.length ? directionalCandidates : candidates;
+    return pool.reduce((nearest, slide) => (
+      Math.abs(slide.offsetLeft - currentLeft) < Math.abs(nearest.offsetLeft - currentLeft) ? slide : nearest
+    ), pool[0]);
+  }
+
+  function showRakhi(index, direction = 0, announce = true) {
+    const nextIndex = (index + slides.length) % slides.length;
+    const target = findTargetSlide(nextIndex, direction);
+    viewport.scrollTo({
+      left: target.offsetLeft,
+      behavior: reducedMotion.matches ? "auto" : "smooth"
+    });
+    updateCarousel(nextIndex, announce);
+  }
+
+  function selectRakhi(index, direction = 0) {
+    stopAutoplay();
+    showRakhi(index, direction);
+  }
+
+  carousel.querySelector("[data-rakhi-prev]")?.addEventListener("click", () => selectRakhi(currentIndex - 1, -1));
+  carousel.querySelector("[data-rakhi-next]")?.addEventListener("click", () => selectRakhi(currentIndex + 1, 1));
+  dots.forEach((dot) => dot.addEventListener("click", () => selectRakhi(Number(dot.dataset.rakhiDot))));
+
+  toggle?.addEventListener("click", () => {
+    userPaused = !userPaused;
+    toggle.querySelector("span").textContent = userPaused ? "▶" : "❚❚";
+    toggle.setAttribute("aria-label", userPaused ? "Start rakhi carousel" : "Pause rakhi carousel");
+    if (userPaused) stopAutoplay();
+    else startAutoplay(true);
+    trackEvent("toggle_rakhi_carousel", { state: userPaused ? "paused" : "playing" });
+  });
+
+  viewport.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    selectRakhi(currentIndex + direction, direction);
+  });
+
+  carousel.addEventListener("mouseenter", () => {
+    isHovered = true;
+    stopAutoplay();
+  });
+  carousel.addEventListener("mouseleave", () => {
+    isHovered = false;
+    startAutoplay();
+  });
+  carousel.addEventListener("focusin", stopAutoplay);
+  carousel.addEventListener("focusout", () => {
+    window.requestAnimationFrame(() => {
+      if (!carousel.contains(document.activeElement)) startAutoplay();
+    });
+  });
+  viewport.addEventListener("touchstart", stopAutoplay, { passive: true });
+  viewport.addEventListener("touchend", startAutoplay, { passive: true });
+
+  viewport.addEventListener("scroll", () => {
+    window.cancelAnimationFrame(scrollFrame);
+    scrollFrame = window.requestAnimationFrame(() => {
+      normaliseScroll();
+      updateCarouselFromPosition();
+    });
+  }, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+
+  reducedMotion.addEventListener?.("change", () => {
+    carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
+    if (reducedMotion.matches) stopAutoplay();
+    else startAutoplay();
+  });
+
+  window.addEventListener("resize", () => {
+    stopAutoplay();
+    window.requestAnimationFrame(() => {
+      measureLoop();
+      viewport.scrollLeft = slides[Math.max(currentIndex, 0)].offsetLeft;
+      startAutoplay();
+    });
+  });
+
+  carousel.classList.toggle("is-reduced-motion", reducedMotion.matches);
+  window.requestAnimationFrame(() => {
+    measureLoop();
+    viewport.scrollLeft = firstOriginalLeft;
+    updateCarousel(0);
+    startAutoplay();
   });
 }
 
@@ -323,6 +567,7 @@ renderTrustPoints();
 renderReviews();
 renderFaqs();
 initialiseAdvertisementActions();
+initialiseRakhiCarousel();
 initialiseOfferCarousel();
 initialiseRevealAnimations();
 captureAttribution();

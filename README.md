@@ -1,6 +1,6 @@
-# Keshri Gift — Raksha Bandhan Advertisement
+# YuloStores — Restaurant Operations Platform
 
-A lightweight, mobile-first local advertisement for the Raksha Bandhan collection at Keshri Gift, Hazaribag.
+A responsive product landing page for YuloStores: one connected platform for restaurant POS, orders, kitchen, inventory, purchasing, staff, customers, payments, reporting, and multi-outlet operations.
 
 ## Run locally
 
@@ -10,15 +10,16 @@ npm start
 
 Open `http://127.0.0.1:4173`.
 
-The server listens on all local interfaces, so IDE port previews and other devices on your network can also reach it. To use another port or restrict the listening address:
+No build step is required. Run `npm run check` for JavaScript syntax validation.
 
-```bash
-PORT=8080 HOST=127.0.0.1 npm start
-```
+## Public pages
 
-No install or build step is required. Run `npm run check` for JavaScript syntax validation. Web-optimized images are served from `assets/*.webp`; the original PNGs are retained as source artwork and for the social sharing image.
+- `/` — YuloStores restaurant operations landing page
+- `/privacy-policy.html` — Yulo Stores privacy policy
+- `/delete-account.html` — account deletion instructions
 
 ## Production notes
 
-- Add the Meta Pixel and GA4 snippets at the marked integration points.
-- Call, WhatsApp and Google Maps actions already use the supplied Keshri Gift details.
+- Connect the demo form to the production CRM or lead API. It currently prepares an email request through the visitor's email client.
+- Replace provisional platform-benefit metrics with verified YuloStores figures before launch.
+- Connect the existing analytics hooks to the production analytics provider if required.

@@ -13,6 +13,8 @@ const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon"
@@ -21,6 +23,7 @@ const publicFiles = new Set([
   "index.html",
   "styles.css",
   "script.js",
+  "yuloStoresLogo.jpeg",
   "privacy-policy.html",
   "delete-account.html"
 ]);
@@ -76,12 +79,12 @@ server.on("error", (error) => {
   } else if (error.code === "EACCES") {
     console.error(`Permission denied while trying to use ${host}:${port}.`);
   } else {
-    console.error("Unable to start the Keshri Gift website:", error.message);
+    console.error("Unable to start the Yulo Stores website:", error.message);
   }
   process.exitCode = 1;
 });
 
 server.listen(port, host, () => {
-  console.log(`Keshri Gift website is ready at http://localhost:${port}`);
+  console.log(`Yulo Stores website is ready at http://localhost:${port}`);
   console.log(`Listening on ${host}:${port} so the site can be opened from previews and other devices.`);
 });

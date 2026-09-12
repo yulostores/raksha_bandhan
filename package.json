@@ -1,8 +1,8 @@
 {
-  "name": "keshri-gift-raksha-bandhan-ad",
+  "name": "yulo-stores-restaurant-landing-page",
   "version": "1.0.0",
   "private": true,
-  "description": "A mobile-first Raksha Bandhan advertisement for Keshri Gift, Hazaribag.",
+  "description": "A polished landing page for YuloStores, the unified restaurant operations platform.",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
